@@ -1,0 +1,37 @@
+<div class="table-row">
+    <div class="itemId">{{id}}</div>
+    <div class="name">
+        <img src="data:image/*;base64,{{image}}" alt="item" />
+        <div>
+            <div style="font-weight: 600;color: red">{{title}}</div>
+            <div>
+                {{summary}}
+            </div>
+        </div>
+    </div>
+    <div class="cost" style="font-weight: 600">{{price}} VND</div>
+    <div class="status">
+        {{#if (isPositive number)}}
+        <span style="font-weight: 600">Còn hàng</span>
+        {{else}}
+        <span style="color: red">Hết hàng</span>
+        {{/if}}
+        <br />
+        ({{number}})
+    </div>
+    {{#if isAdmin}}
+    <div class="operate">
+        <button class="edit" id="editButton">Edit</button>
+        <button class="details" id="detailButton">Details</button>
+        <button class="delete" id="deleteButton">Delete</button>
+    </div>
+    {{else}}
+    <div class="brand">
+        HP
+    </div>
+    <div class="add">
+        <button class="details" id="detailButton">Details</button>
+        <a href="/" style="color: rgb(32, 104, 187)">Thêm vào giỏ hàng</a>
+    </div>
+    {{/if}}
+</div>
