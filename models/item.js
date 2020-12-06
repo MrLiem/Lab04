@@ -7,6 +7,9 @@ const itemSchema = mongoose.Schema({
   title: {
     type: String,
   },
+  brand: {
+    type: String,
+  },
   summary: {
     type: String,
   },

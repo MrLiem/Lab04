@@ -35,18 +35,16 @@ router.post("/login", (req, res) => {
       if (!isMatch) {
         return res.json({ loginSuccess: false, message: "wrong password" });
       }
-    });
-
-    //generate Token
-    user.generateToken((err, user) => {
-      if (err) return res.status(400).send(err);
-      res.status(200).json({ loginSuccess: true, x_auth: user.token });
+      //generate Token
+      user.generateToken((err, user) => {
+        if (err) return res.status(400).send(err);
+        res.status(200).json({ loginSuccess: true, x_auth: user.token });
+      });
     });
   });
 });
 
-router.post("/logout", auth, (req, res) => {
-  console.log("logout route", "ok");
+router.get("/logout", auth, (req, res) => {
   User.findOneAndUpdate(
     { _id: req.user._id },
     {

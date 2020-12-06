@@ -1,3 +1,14 @@
+import { setHeader } from "../../utils/setHeader.js";
+
+import { logout } from "../../utils/logout.js";
+
+//set headers
+setHeader();
+
+// logout function
+const logoutNav = document.querySelector("#logout-nav");
+logoutNav.addEventListener("click", logout);
+
 const button = document.querySelector("#addItem");
 button.addEventListener("click", (event) => {
   event.preventDefault();
@@ -30,7 +41,7 @@ button.addEventListener("click", (event) => {
       // send image
       let formData = new FormData();
       let images = document.querySelector("#images");
-      console.log(images.files[0]);
+      // console.log(images.files[0]);
       if (images.files[0] === undefined) {
         return alert("Please add an image!!!");
       }
@@ -53,8 +64,3 @@ button.addEventListener("click", (event) => {
 
   addItem();
 });
-
-import { logout } from "../../utils/logout.js";
-// logout function
-const logoutNav = document.querySelector("#logout-nav");
-logoutNav.addEventListener("click", logout);

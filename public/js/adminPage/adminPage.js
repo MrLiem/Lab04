@@ -8,19 +8,11 @@ setHeader();
 const logoutNav = document.querySelector("#logout-nav");
 logoutNav.addEventListener("click", logout);
 
-//detail button handle
+// go to details item page
 const detailButton = document.querySelector("#detailButton");
-detailButton.addEventListener("click", async function (event) {
-  event.preventDefault();
-
+detailButton.addEventListener("click", function (event) {
   const parentDivOfDetailButton = detailButton.parentElement;
   const tableRow = parentDivOfDetailButton.parentElement;
   const itemId = tableRow.querySelector(".itemId").innerHTML;
-
-  const response = await axios.get(`/getDetailItem/${itemId}`);
-  if (response.data.success) {
-    alert("adminPage", response.data.success);
-  } else {
-    alert("adminPage", response.data.message);
-  }
+  location.href = `/detailItemPage/${itemId}`;
 });

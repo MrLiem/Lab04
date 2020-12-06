@@ -8,6 +8,14 @@ const setHeader = () => {
   if (!x_auth) {
     adminNav.style.display = "none";
     logoutNav.style.display = "none";
+    const url = location.pathname;
+    if (
+      url === "/admin" ||
+      url === "/addItemPage" ||
+      url === "/updateItemPage"
+    ) {
+      location.href = "/";
+    }
   } else {
     loginNav.style.display = "none";
     registerNav.style.display = "none";

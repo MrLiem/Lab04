@@ -1,6 +1,11 @@
 import { setHeader } from "../../utils/setHeader.js";
 setHeader();
 
+import { logout } from "../../utils/logout.js";
+// logout function
+const logoutNav = document.querySelector("#logout-nav");
+logoutNav.addEventListener("click", logout);
+
 let title = document.querySelector("#title");
 let brand = document.querySelector("#brand");
 let summary = document.querySelector("#summary");
@@ -61,8 +66,3 @@ button.addEventListener("click", (event) => {
 
   saveUpdatedITem();
 });
-
-import { logout } from "../../utils/logout.js";
-// logout function
-const logoutNav = document.querySelector("#logout-nav");
-logoutNav.addEventListener("click", logout);

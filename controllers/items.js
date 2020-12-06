@@ -106,12 +106,4 @@ router.put("/uploadUpdatedImage", upload.single("image"), async (req, res) => {
   res.json({ success: true });
 });
 
-// see detail Item
-router.get("/getDetailItem/:id", async (req, res) => {
-  const itemId = req.params.id;
-  Item.findOne({ id: itemId }, (err, item) => {
-    if (err) return res.json({ success: false, message: err });
-    return res.json({ success: true });
-  });
-});
 module.exports = router;

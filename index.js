@@ -71,6 +71,23 @@ app.get("/updateItemPage", (req, res) => {
   res.render("updateItemPage");
 });
 
+// see detail Item
+app.get("/detailItemPage/:id", async (req, res) => {
+  const itemId = req.params.id;
+  Item.findOne({ id: itemId }, (err, item) => {
+    if (err) return res.json({ success: false, message: err });
+    return res.render("detailItemPage", {
+      id: item.id,
+      image: item.image,
+      title: item.title,
+      brand: item.brand,
+      summary: item.summary,
+      price: item.price,
+      number: item.number,
+    });
+  });
+});
+
 // route for request add, update, delete item
 app.use("/", require("./controllers/items"));
 app.use("/api/users/", require("./controllers/users"));
