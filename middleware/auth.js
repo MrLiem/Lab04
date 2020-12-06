@@ -2,7 +2,7 @@ const { User } = require("../models/user");
 
 const auth = (req, res, next) => {
   let token;
-  if (req.headers) {
+  if (req.headers.authorization) {
     token = req.headers.authorization.split(" ")[1];
   }
   // console.log(token);
