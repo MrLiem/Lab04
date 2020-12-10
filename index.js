@@ -71,8 +71,9 @@ app.get("/adminPage", auth, async (req, res) => {
     isAdmin,
     isNoneUser,
   };
-  const userId = req.user._id;
-  const email = req.user.email;
+
+  let userId = req.user._id;
+  let email = req.user.email;
   let items = await Item.find({ userId });
   res.render("adminPage", { items, email, check });
 });
@@ -153,7 +154,7 @@ app.get("/detailItemPage/:id", auth, async (req, res) => {
   }
 });
 
-// SEEN ITEM PAGE
+// SeenItemPage IF YOU ARE AUTHENTICATED
 app.get("/seenItemPage", auth, async (req, res) => {
   let isAdmin = req.isAdmin;
   let isNoneUser = req.isNoneUser;
@@ -163,17 +164,44 @@ app.get("/seenItemPage", auth, async (req, res) => {
   };
 
   let items = [];
+  let seenItems = [];
+
   if (req.user) {
     let userId = req.user._id;
     const user = await User.findById(userId);
-    let seenItem = user.seenItem;
-    items = await Item.find({
-      id: {
-        $in: seenItem,
-      },
-    });
+    seenItems = user.seenItem;
   }
 
+  items = await Item.find({
+    id: {
+      $in: seenItems,
+    },
+  });
+
+  return res.render("seenItemPage", { items, check });
+});
+
+// SeenItemPage IF YOU ARE NOT AUTHENTICATED
+// If You are not user, seenItem got from req.body (get from session storage)
+app.get("/seenItemPageFromSession/:seenItems", auth, async (req, res) => {
+  let isAdmin = req.isAdmin;
+  let isNoneUser = req.isNoneUser;
+  let check = {
+    isAdmin,
+    isNoneUser,
+  };
+  // Get seenItems from params url
+  let seenItems = JSON.parse(req.params.seenItems.split("=")[1]);
+  let seenItemsArray = [];
+  let keys = Object.keys(seenItems);
+  for (let i = 0; i < keys.length; i++) {
+    seenItemsArray.push(seenItems[keys[i]]);
+  }
+  let items = await Item.find({
+    id: {
+      $in: seenItemsArray,
+    },
+  });
   return res.render("seenItemPage", { items, check });
 });
 

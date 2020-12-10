@@ -6,14 +6,17 @@ if (logoutNav) {
   logoutNav.addEventListener("click", logout);
 }
 
+// Save to sessionStorage seen itemId if someone not authenticated gets detailItemPage
 let itemId = document.location.pathname.split("/")[2];
-let seenItems = [];
-let oldSeenItems = sessionStorage.getItem("seenItems");
+let oldSeenItems = JSON.parse(sessionStorage.getItem("seenItems"));
+let newSeenItems = [];
 
 if (!oldSeenItems) {
-  seenItems.push(itemId);
+  newSeenItems = [itemId];
+} else if (oldSeenItems.includes(itemId)) {
+  newSeenItems = oldSeenItems;
 } else {
-  seenItems = oldSeenItems;
-  seenItems.push(itemId);
+  newSeenItems = [...oldSeenItems, itemId];
 }
-sessionStorage.setItem("seenItems", seenItems);
+
+sessionStorage.setItem("seenItems", JSON.stringify(newSeenItems));

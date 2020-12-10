@@ -5,8 +5,8 @@ const logout = async (event) => {
     alert("Logout successfull!!!");
     // Delete Cookie
     document.cookie = "x_auth=;";
-    // Return to mainPage
-    location.href = "/";
+    // Return to loginPage
+    location.href = "/loginPage";
   } else {
     alert(response.data.error);
   }

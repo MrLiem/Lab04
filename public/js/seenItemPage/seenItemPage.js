@@ -2,8 +2,9 @@ import { logout } from "../../utils/logout.js";
 
 /*---- Set logout function*/
 const logoutNav = document.querySelector("#logout-nav");
-logoutNav.addEventListener("click", logout);
-
+if (logoutNav) {
+  logoutNav.addEventListener("click", logout);
+}
 /*--------------------------*/
 
 /*---------Go to details item page----------*/
@@ -17,3 +18,16 @@ for (let i = 0; i < detailButtons.length; i++) {
   });
 }
 /*--------------------------*/
+
+// Load seenItems from sessionStorage if you are not authenticated
+let seenItems = sessionStorage.getItem("seenItems");
+let userId = document.cookie.split("=")[1];
+if (seenItems && userId === "") {
+  let encodeSeenItems = encodeURIComponent(seenItems);
+  if (
+    location.pathname !==
+    `/seenItemPageFromSession/seenItems=${encodeSeenItems}`
+  ) {
+    location.pathname = `/seenItemPageFromSession/seenItems=${encodeSeenItems}`;
+  }
+}
