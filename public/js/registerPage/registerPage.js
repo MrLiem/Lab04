@@ -1,9 +1,6 @@
 import { validateEmail } from "../../utils/validateEmail.js";
 
 const loginButton = document.querySelector("#loginButton");
-import { setHeader } from "../../utils/setHeader.js";
-setHeader();
-
 loginButton.addEventListener("click", async (event) => {
   event.preventDefault();
   let email = document.querySelector("#loginEmail").value;
@@ -18,7 +15,7 @@ loginButton.addEventListener("click", async (event) => {
   }
 
   const response = await axios.post(
-    "/api/users/register",
+    "/users/register",
     { email, password },
     {
       headers: {
@@ -29,7 +26,7 @@ loginButton.addEventListener("click", async (event) => {
 
   if (response.data.success) {
     alert("Register success full!");
-    location.href = "/login";
+    location.href = "/loginPage";
   } else {
     alert(response.data.message);
   }

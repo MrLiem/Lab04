@@ -4,13 +4,17 @@ const path = require("path");
 const express = require("express");
 const hbs = require("hbs");
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
 
-//import middleware xử lý auth
+//import authentication middleware
 const { auth } = require("./middleware/auth");
+
 //import file
 const config = require("./config/key");
 const { Item } = require("./models/item");
+const item = require("./models/item");
+const { User } = require("./models/user");
 
 // Khởi chạy express
 const app = express();
@@ -25,9 +29,10 @@ mongoose
   .then(() => console.log("DB Connected!!!"))
   .catch((err) => console.log(err));
 
-// set JSON parse cho request
+// set JSON parse and cookie parse cho request
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 //Define paths for Express config
 const publicDirectoryPath = path.join(__dirname, "./public");
@@ -39,58 +44,145 @@ app.set("view engine", "hbs");
 app.set("views", viewsPath);
 hbs.registerPartials(partialsPath);
 hbs.registerHelper("isPositive", (number) => number > 0);
-// hbs.registerHelper("isAdmin", () => {});
 
 //Setup static directory to serve
 app.use(express.static(publicDirectoryPath));
 
-// route for Page
-app.get("/", async (req, res) => {
+/*--------------ROUTE FOR PAGEs-------------------------------- */
+
+// MAIN PAGE
+app.get("/", auth, async (req, res) => {
+  let isAdmin = req.isAdmin;
+  let isNoneUser = req.isNoneUser;
+  let check = {
+    isAdmin,
+    isNoneUser,
+  };
+
   let items = await Item.find();
-  res.render("mainPage", { items });
+  res.render("mainPage", { items, check });
 });
 
-app.get("/admin", async (req, res) => {
-  let items = await Item.find();
-  res.render("adminPage", { items });
+// ADMIN PAGE
+app.get("/adminPage", auth, async (req, res) => {
+  let isAdmin = req.isAdmin;
+  let isNoneUser = req.isNoneUser;
+  let check = {
+    isAdmin,
+    isNoneUser,
+  };
+  const userId = req.user._id;
+  const email = req.user.email;
+  let items = await Item.find({ userId });
+  res.render("adminPage", { items, email, check });
 });
 
-app.get("/login", (req, res) => {
-  res.render("loginPage");
+// LOGIN PAGE
+app.get("/loginPage", (req, res) => {
+  let check = {
+    isAdmin: false,
+    isNoneUser: true,
+  };
+  res.render("loginPage", { check });
 });
 
-app.get("/register", (req, res) => {
-  res.render("registerPage");
+// REGISTER PAGE
+app.get("/registerPage", (req, res) => {
+  let check = {
+    isAdmin: false,
+    isNoneUser: true,
+  };
+  res.render("registerPage", { check });
 });
 
-app.get("/addItemPage", (req, res) => {
-  res.render("addItemPage");
+// ADD ITEM PAGE
+app.get("/addItemPage", auth, (req, res) => {
+  let isAdmin = req.isAdmin;
+  let isNoneUser = req.isNoneUser;
+  let check = {
+    isAdmin,
+    isNoneUser,
+  };
+  res.render("addItemPage", { check });
 });
 
-app.get("/updateItemPage", (req, res) => {
-  res.render("updateItemPage");
+// UPDATE ITEM PAGE
+app.get("/updateItemPage/:id", auth, (req, res) => {
+  let isAdmin = req.isAdmin;
+  let isNoneUser = req.isNoneUser;
+  let check = {
+    isAdmin,
+    isNoneUser,
+  };
+  const itemId = req.params.id;
+  Item.findOne({ id: itemId }, (err, item) => {
+    if (err) return res.json({ success: false, message: err });
+    res.render("updateItemPage", { item, check });
+  });
 });
 
-// see detail Item
-app.get("/detailItemPage/:id", async (req, res) => {
+// DETAIL ITEM PAGE
+app.get("/detailItemPage/:id", auth, async (req, res) => {
+  let isAdmin = req.isAdmin;
+  let isNoneUser = req.isNoneUser;
+  let check = {
+    isAdmin,
+    isNoneUser,
+  };
+
+  // Get itemId from Url params and query
   const itemId = req.params.id;
   Item.findOne({ id: itemId }, (err, item) => {
     if (err) return res.json({ success: false, message: err });
     return res.render("detailItemPage", {
-      id: item.id,
-      image: item.image,
-      title: item.title,
-      brand: item.brand,
-      summary: item.summary,
-      price: item.price,
-      number: item.number,
+      item,
+      check,
     });
   });
+
+  // Add seen Item to user
+  if (req.user) {
+    const userId = req.user._id;
+    const user = await User.findById(userId);
+    user.seenItem.push(itemId);
+    // Delete duplicate seen item
+    user.seenItem = user.seenItem.filter(
+      (a, b) => user.seenItem.indexOf(a) === b
+    );
+    await user.save();
+  }
 });
 
-// route for request add, update, delete item
-app.use("/", require("./controllers/items"));
-app.use("/api/users/", require("./controllers/users"));
+// SEEN ITEM PAGE
+app.get("/seenItemPage", auth, async (req, res) => {
+  let isAdmin = req.isAdmin;
+  let isNoneUser = req.isNoneUser;
+  let check = {
+    isAdmin,
+    isNoneUser,
+  };
+
+  let items = [];
+  if (req.user) {
+    let userId = req.user._id;
+    const user = await User.findById(userId);
+    let seenItem = user.seenItem;
+    items = await Item.find({
+      id: {
+        $in: seenItem,
+      },
+    });
+  }
+
+  return res.render("seenItemPage", { items, check });
+});
+
+/*---------------------------------------------- */
+
+/*-----------Route for request add, update, delete item------------------ */
+app.use("/items/", require("./controllers/items"));
+app.use("/users/", require("./controllers/users"));
+/*---------------------------------------------- */
 
 app.listen(port, () => {
   console.log(`server listen on port ${port}`);

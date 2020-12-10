@@ -1,17 +1,15 @@
-import { setHeader } from "../../utils/setHeader.js";
-
 import { logout } from "../../utils/logout.js";
-
-//set headers
-setHeader();
 
 // logout function
 const logoutNav = document.querySelector("#logout-nav");
 logoutNav.addEventListener("click", logout);
 
-const button = document.querySelector("#addItem");
-button.addEventListener("click", (event) => {
+const createItemButton = document.querySelector("#addItem");
+createItemButton.addEventListener("click", (event) => {
   event.preventDefault();
+  // Handle user can not click multiple times
+  const addItemButton = document.querySelector("#addItem");
+  addItemButton.classList.add("disabled");
 
   let id = document.querySelector("#id").value;
   let title = document.querySelector("#title").value;
@@ -36,17 +34,17 @@ button.addEventListener("click", (event) => {
     if (price < 0 || price > 10000000) {
       return alert("Please type price between 0  and 10000000!!!");
     }
-    const response = await axios.post("/addItem", item);
+
+    const response = await axios.post("/items/addItem", item);
     if (response.data.success) {
       // send image
       let formData = new FormData();
       let images = document.querySelector("#images");
-      // console.log(images.files[0]);
       if (images.files[0] === undefined) {
         return alert("Please add an image!!!");
       }
       formData.append("image", images.files[0]);
-      const response2 = await axios.post("/uploadNewImage", formData, {
+      const response2 = await axios.post("/items/uploadNewImage", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -56,9 +54,11 @@ button.addEventListener("click", (event) => {
       } else {
         alert(response2.data.message);
       }
-      location.href = "/admin";
+      addItemButton.classList.remove("disabled");
+      location.href = "/adminPage";
     } else {
       alert(response.data.message);
+      addItemButton.classList.remove("disabled");
     }
   };
 

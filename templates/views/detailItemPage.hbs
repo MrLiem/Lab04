@@ -11,35 +11,35 @@
 </head>
 
 <body>
-    {{>header}}
+    {{>header check}}
     <main>
         <h2>Detail Item </h2>
-        <h5>Product Id: {{id}}</h5>
+        <h5>Product Id: {{item.id}}</h5>
         <hr />
         <form>
             <div class="form-group">
                 <label for="title">Title</label>
-                <input type="text" class="form-control" id="title" value={{title}} readonly>
+                <input type="text" class="form-control" id="title" value={{item.title}} readonly>
             </div>
             <div class="form-group">
                 <label for="brand">Brand</label>
-                <input type="text" class="form-control" id="brand" value={{brand}} readonly>
+                <input type="text" class="form-control" id="brand" value={{item.brand}} readonly>
             </div>
             <div class="form-group">
                 <label for="summary">Summary</label>
-                <input type="text" class="form-control" id="summary" value={{summary}} readonly>
+                <input type="text" class="form-control" id="summary" value={{item.summary}} readonly>
             </div>
             <div class="form-group" style="margin-left: -5px; justify-content: flex-start">
                 <div style="padding-left: 165px; margin-right: 25px ">Image</div>
-                <img src="data:image/*;base64,{{image}}" alt="item" style="width: 200px; height: 200px; " />
+                <img src="data:image/*;base64,{{item.image}}" alt="item" style="width: 200px; height: 200px; " />
             </div>
             <div class="form-group">
                 <label for="price">Price</label>
-                <input type="number" class="form-control" id="price" value={{price}} readonly>
+                <input type="number" class="form-control" id="price" value={{item.price}} readonly>
             </div>
             <div class="form-group">
                 <label for="number">Number</label>
-                <input type="number" class="form-control" id="number" value={{number}} readonly>
+                <input type="number" class="form-control" id="number" value={{item.number}} readonly>
             </div>
         </form>
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"

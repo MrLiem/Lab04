@@ -38,7 +38,10 @@ router.post("/login", (req, res) => {
       //generate Token
       user.generateToken((err, user) => {
         if (err) return res.status(400).send(err);
-        res.status(200).json({ loginSuccess: true, x_auth: user.token });
+        res
+          .cookie("x_auth", user.token)
+          .status(200)
+          .json({ loginSuccess: true, userId: user._id });
       });
     });
   });
@@ -47,11 +50,9 @@ router.post("/login", (req, res) => {
 router.get("/logout", auth, (req, res) => {
   User.findOneAndUpdate(
     { _id: req.user._id },
-    {
-      useFindAndModify: false,
-    },
     { token: "" },
-    (err, doc) => {
+    { new: true, useFindAndModify: false },
+    (err, user) => {
       if (err) return res.json({ success: false, message: err });
       return res.status(200).json({ success: true });
     }

@@ -11,7 +11,7 @@
 </head>
 
 <body>
-    {{>header}}
+    {{>header check}}
     <main>
         <h2>Cập nhật Sản phẩm</h2>
         <h5>Product</h5>
@@ -19,27 +19,27 @@
         <form>
             <div class="form-group">
                 <label for="title">Title</label>
-                <input type="text" class="form-control" id="title">
+                <input type="text" class="form-control" id="title" value={{item.title}}>
             </div>
             <div class="form-group">
                 <label for="brand">Brand</label>
-                <input type="text" class="form-control" id="brand">
+                <input type="text" class="form-control" id="brand" value={{item.brand}}>
             </div>
             <div class="form-group">
                 <label for="summary">Summary</label>
-                <input type="text" class="form-control" id="summary">
+                <input type="text" class="form-control" id="summary" value={{item.summary}}>
             </div>
             <div class="form-group" style="margin-left: -5px;">
                 <label for="images">Image</label>
-                <input type="file" id="images" name="image">
+                <input type="file" name="image" id="images">
             </div>
             <div class="form-group">
                 <label for="price">Price</label>
-                <input type="number" class="form-control" id="price">
+                <input type="number" class="form-control" id="price" value={{item.price}}>
             </div>
             <div class="form-group">
                 <label for="number">Number</label>
-                <input type="number" class="form-control" id="number">
+                <input type="number" class="form-control" id="number" value={{item.number}}>
             </div>
             <div class="form-button">
                 <button type="submit" class="btn btn-primary" id="saveItemButton">Save</button>

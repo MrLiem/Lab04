@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
 const itemSchema = mongoose.Schema({
   id: {
@@ -21,6 +22,10 @@ const itemSchema = mongoose.Schema({
   },
   number: {
     type: Number,
+  },
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
   },
 });
 

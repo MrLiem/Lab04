@@ -10,9 +10,22 @@ const userSchema = mongoose.Schema({
   password: {
     type: String,
   },
+  fullName: {
+    type: String,
+  },
+  birthday: {
+    type: Date,
+  },
+  sex: {
+    type: String,
+  },
   isAdmin: {
     type: Boolean,
     default: false,
+  },
+  seenItem: {
+    type: [String],
+    ref: "Item",
   },
   token: {
     type: String,

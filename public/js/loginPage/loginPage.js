@@ -1,6 +1,4 @@
 import { validateEmail } from "../../utils/validateEmail.js";
-import { setHeader } from "../../utils/setHeader.js";
-setHeader();
 
 const loginButton = document.querySelector("#loginButton");
 
@@ -18,7 +16,7 @@ loginButton.addEventListener("click", async (event) => {
   }
 
   const response = await axios.post(
-    "/api/users/login",
+    "/users/login",
     { email, password },
     {
       headers: {
@@ -29,7 +27,6 @@ loginButton.addEventListener("click", async (event) => {
 
   if (response.data.loginSuccess) {
     alert("Login successfull!");
-    await localStorage.setItem("x_auth", JSON.stringify(response.data.x_auth));
     location.href = "/";
   } else {
     alert(response.data.message);
