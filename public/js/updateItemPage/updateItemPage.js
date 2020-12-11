@@ -15,7 +15,6 @@ saveItemButton.addEventListener("click", (event) => {
   event.preventDefault();
 
   // Handle user can not click multiple times
-  const addItemButton = document.querySelector("#addItem");
   saveItemButton.classList.add("disabled");
 
   // Get ItemId and userId from localStorage and Cookie

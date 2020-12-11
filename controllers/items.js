@@ -69,6 +69,7 @@ let updatedItem = new Item();
 router.put("/saveUpdatedItem", auth, (req, res) => {
   const { id, title, brand, summary, price, number } = req.body;
   const userId = req.user._id;
+
   // Update Item
   updatedItem.id = id;
   updatedItem.title = title;
